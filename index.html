@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Política de Seguridad de Contenido (CSP) básica -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com;">
+<title>Nodo Norte — Lecturas astrológicas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#131B2E;
+    --night-2:#1B2440;
+    --plum:#241B3D;
+    --gold:#C9A227;
+    --gold-soft:#DEBF63;
+    --bone:#EDE7DA;
+    --rose:#A9667A;
+    --line: rgba(237,231,218,0.14);
+    --ok:#6E8F63;
+    box-sizing:border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-padding-top: env(safe-area-inset-top, 0px);}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background: radial-gradient(ellipse at 20% -10%, #232D4C 0%, var(--night) 55%);
+    color:var(--bone);
+    font-family:'Inter',-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  header{ max-width:720px; margin:0 auto; padding: 2.4rem 1.5rem 1.2rem; position:relative; }
+  .brand{ display:flex; align-items:center; gap:0.65rem; margin-bottom:2rem; }
+  .brand .mark{ width:30px; height:30px; flex-shrink:0; }
+  .brand .name{ font-size:0.95rem; letter-spacing:0.03em; color:var(--gold-soft); }
+  .stars{ position:absolute; top:0; right:1.2rem; width:140px; height:110px; opacity:0.8; pointer-events:none; }
+  h1{
+    font-family:'Cormorant Garamond', Georgia, serif;
+    font-style:italic; font-weight:500; font-size: clamp(2.1rem, 6.4vw, 3.1rem);
+    line-height:1.12; margin:0 0 0.9rem; max-width:15ch; color:#fff;
+  }
+  .sub{ color: rgba(237,231,218,0.72); font-size:0.98rem; line-height:1.6; max-width:44ch; margin:0; }
+  main{ max-width:720px; margin:0 auto; padding: 0 1.5rem 4rem; }
+  .card{ background: var(--night-2); border: 1px solid var(--line); border-radius: 6px; padding: 1.6rem; margin-top: 1.4rem; }
+  .step-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:1.1rem; }
+  .step-head h2{ font-family:'Cormorant Garamond',serif; font-weight:600; font-size:1.25rem; margin:0; color:#fff; }
+  .step-head .tag{ font-size:0.7rem; letter-spacing:0.04em; color:var(--gold-soft); border:1px solid var(--gold); padding:0.15rem 0.55rem; border-radius:20px; }
+  .svc-list{ display:flex; flex-direction:column; gap:0.6rem; }
+  .svc{ display:flex; align-items:center; justify-content:space-between; padding: 0.9rem 1rem; border: 1px solid var(--line); border-radius: 6px; background: transparent; color: var(--bone); cursor:pointer; text-align:left; width:100%; }
+  .svc:hover{ border-color: var(--gold); }
+  .svc.sel{ border-color: var(--gold); background: rgba(201,162,39,0.08); }
+  .svc .t{ display:flex; flex-direction:column; gap:0.2rem; }
+  .svc .t b{ font-size:1rem; font-weight:500; }
+  .svc .t span{ font-size:0.8rem; color: rgba(237,231,218,0.55); }
+  .svc .price{ font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--gold-soft); white-space:nowrap; }
+  .days{ display:flex; gap:0.5rem; overflow-x:auto; padding-bottom:0.3rem; margin-bottom:1.1rem; }
+  .day{ flex:0 0 auto; padding:0.6rem 0.9rem; border:1px solid var(--line); border-radius:6px; font-size:0.82rem; cursor:pointer; background:transparent; color:var(--bone); }
+  .day.sel{ background:var(--gold); color:var(--night); border-color:var(--gold); }
+  .slots{ display:grid; grid-template-columns: repeat(auto-fill, minmax(84px,1fr)); gap:0.5rem; }
+  .slot{ padding:0.6rem 0.4rem; border:1px solid var(--line); border-radius:6px; font-size:0.85rem; cursor:pointer; background:transparent; color:var(--bone); text-align:center; }
+  .slot:disabled{ opacity:0.28; cursor:not-allowed; text-decoration:line-through; }
+  .slot.sel{ background:var(--rose); border-color:var(--rose); color:#fff; }
+  .summary{ display:flex; justify-content:space-between; align-items:baseline; padding:0.5rem 0; border-bottom:1px dashed var(--line); font-size:0.92rem; }
+  .summary.total{ border-bottom:none; padding-top:0.8rem; font-weight:600; font-size:1.1rem; color:#fff; }
+  .summary .muted{ color: rgba(237,231,218,0.55); }
+  .pay-brand{ display:flex; align-items:center; gap:0.5rem; margin-top:1.2rem; padding:0.7rem 0.9rem; border:1px solid var(--line); border-radius:6px; font-size:0.82rem; color: rgba(237,231,218,0.75); }
+  .pay-brand b{ color:var(--gold-soft); font-weight:600; }
+  .field{ margin-top:1rem; }
+  .field label{ display:block; font-size:0.78rem; color: rgba(237,231,218,0.55); margin-bottom:0.35rem; }
+  .field input{ width:100%; padding:0.7rem 0.8rem; border:1px solid var(--line); border-radius:6px; font-size:0.9rem; background: var(--night); color:var(--bone); }
+  .pay-btn{ margin-top:1.4rem; width:100%; padding:0.95rem; border:none; border-radius:6px; background: var(--gold); color: var(--night); font-size:0.98rem; font-weight:600; cursor:pointer; }
+  .pay-btn:disabled{ background:#4A4636; color:rgba(237,231,218,0.4); cursor:not-allowed; }
+  .pay-btn:not(:disabled):hover{ background:var(--gold-soft); }
+  .fineprint{ margin-top:0.8rem; font-size:0.76rem; color: rgba(237,231,218,0.45); line-height:1.5; text-align:center; }
+  .hidden{ display:none !important; }
+  @media (max-width:480px){ .stars{ display:none; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <svg class="mark" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"><circle cx="15" cy="15" r="12" fill="none" stroke="#C9A227" stroke-width="1.3"/><circle cx="15" cy="15" r="2" fill="#C9A227"/></svg>
+    <span class="name">Nodo Norte — Lecturas astrológicas</span>
+  </div>
+  <h1>Tu carta, leída<br>con calma y de verdad.</h1>
+  <p class="sub">Elige tu lectura, agenda un horario y confirma tu sesión con una seña.</p>
+</header>
+
+<main>
+  <!-- STEP 1 -->
+  <section class="card" id="step1">
+    <div class="step-head"><h2>Elige tu lectura</h2><span class="tag">paso 1/3</span></div>
+    <div class="svc-list" id="svcList">
+      <button class="svc" data-id="1" data-name="Carta natal completa" data-price="55000" data-dep="15000">
+        <span class="t"><b>Carta natal completa</b><span>Personalidad, propósito y patrones de vida · 75 min</span></span>
+        <span class="price">$55.000</span>
+      </button>
+      <button class="svc" data-id="2" data-name="Sinastría de pareja" data-price="70000" data-dep="20000">
+        <span class="t"><b>Sinastría de pareja</b><span>Compatibilidad entre dos cartas · 90 min</span></span>
+        <span class="price">$70.000</span>
+      </button>
+      <button class="svc" data-id="3" data-name="Tránsitos del año" data-price="40000" data-dep="12000">
+        <span class="t"><b>Tránsitos del año</b><span>Qué se mueve para ti en los próximos 12 meses · 45 min</span></span>
+        <span class="price">$40.000</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="card hidden" id="step2">
+    <div class="step-head"><h2>Elige día y hora</h2><span class="tag">paso 2/3</span></div>
+    <div class="days" id="dayList"></div>
+    <div class="slots" id="slotList"></div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="card hidden" id="step3">
+    <div class="step-head"><h2>Confirma con una seña</h2><span class="tag">paso 3/3</span></div>
+    <div class="summary"><span class="muted">Lectura</span><span id="sumSvc">—</span></div>
+    <div class="summary"><span class="muted">Horario</span><span id="sumSlot">—</span></div>
+    <div class="summary"><span class="muted">Valor total</span><span id="sumTotal">—</span></div>
+    <div class="summary total"><span>Seña a pagar ahora</span><span id="sumDep">—</span></div>
+
+    <div class="pay-brand">
+      <span>Pago seguro procesado mediante <b>Webpay Plus</b></span>
+    </div>
+
+    <!-- NOTA DE SEGURIDAD PCI-DSS: NUNCA pidas números de tarjeta ni CVC directamente en tu HTML. Webpay capturará los datos en su sitio oficial. -->
+    <div class="field">
+      <label>Nombre completo</label>
+      <input type="text" id="fName" placeholder="Javiera Muñoz" required>
+    </div>
+    <div class="field">
+      <label>Correo electrónico (para confirmación)</label>
+      <input type="email" id="fEmail" placeholder="javiera@email.com" required>
+    </div>
+
+    <button class="pay-btn" id="payBtn" disabled>Pagar seña con Webpay Plus</button>
+    <p class="fineprint">Serás redirigido al sitio seguro de Webpay Plus para completar la transacción.</p>
+  </section>
+</main>
+
+<script>
+(function(){
+  const API_BACKEND_URL = "https://tu-backend-api.com"; // Cambiar por la URL real de tu backend
+  const state = { svc:null, day:null, slot:null };
+
+  const svcList = document.getElementById('svcList');
+  svcList.addEventListener('click', e => {
+    const btn = e.target.closest('.svc');
+    if(!btn) return;
+    [...svcList.children].forEach(c=>c.classList.remove('sel'));
+    btn.classList.add('sel');
+    state.svc = { id: btn.dataset.id, name: btn.dataset.name, price: parseInt(btn.dataset.price,10), dep: parseInt(btn.dataset.dep,10) };
+    document.getElementById('step2').classList.remove('hidden');
+    document.getElementById('step2').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  const dayNames = ['Hoy','Mañana','Jue 24','Vie 25','Sáb 26'];
+  const dayList = document.getElementById('dayList');
+  const slotList = document.getElementById('slotList');
+  const allSlots = ['10:00','11:00','12:00','15:00','16:00','17:00','18:00','19:00'];
+
+  dayNames.forEach((d,i)=>{
+    const b = document.createElement('button');
+    b.className='day'; b.textContent=d; b.dataset.i=i;
+    dayList.appendChild(b);
+  });
+
+  dayList.addEventListener('click', e=>{
+    const b = e.target.closest('.day');
+    if(!b) return;
+    [...dayList.children].forEach(c=>c.classList.remove('sel'));
+    b.classList.add('sel');
+    state.day = { label: b.textContent, i: parseInt(b.dataset.i,10) };
+    state.slot = null;
+    slotList.innerHTML = '';
+    allSlots.forEach(s => {
+      const btnSlot = document.createElement('button');
+      btnSlot.className = 'slot';
+      btnSlot.textContent = s;
+      slotList.appendChild(btnSlot);
+    });
+  });
+
+  slotList.addEventListener('click', e=>{
+    const b = e.target.closest('.slot');
+    if(!b) return;
+    [...slotList.children].forEach(c=>c.classList.remove('sel'));
+    b.classList.add('sel');
+    state.slot = b.textContent;
+    fillStep3();
+    document.getElementById('step3').classList.remove('hidden');
+    document.getElementById('step3').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  const fmt = n => '$' + n.toLocaleString('es-CL');
+  function fillStep3(){
+    document.getElementById('sumSvc').textContent = state.svc.name;
+    document.getElementById('sumSlot').textContent = `${state.day.label}, ${state.slot} hrs`;
+    document.getElementById('sumTotal').textContent = fmt(state.svc.price);
+    document.getElementById('sumDep').textContent = fmt(state.svc.dep);
+  }
+
+  const fName = document.getElementById('fName');
+  const fEmail = document.getElementById('fEmail');
+  const payBtn = document.getElementById('payBtn');
+
+  function checkForm(){
+    payBtn.disabled = !(fName.value.trim().length > 2 && fEmail.value.includes('@'));
+  }
+  [fName, fEmail].forEach(f => f.addEventListener('input', checkForm));
+
+  payBtn.addEventListener('click', async () => {
+    payBtn.disabled = true;
+    payBtn.textContent = 'Iniciando pago seguro...';
+
+    try {
+      const response = await fetch(`${API_BACKEND_URL}/api/pay/init`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          serviceId: state.svc.id,
+          userName: fName.value,
+          userEmail: fEmail.value,
+          slot: `${state.day.label} ${state.slot}`
+        })
+      });
+
+      const data = await response.json();
+      if (data.url && data.token) {
+        // Formulario dinámico para redirigir a Webpay
+        const form = document.createElement('form');
+        form.action = data.url;
+        form.method = 'POST';
+        const inputToken = document.createElement('input');
+        inputToken.type = 'hidden';
+        inputToken.name = 'token_ws';
+        inputToken.value = data.token;
+        form.appendChild(inputToken);
+        document.body.appendChild(form);
+        form.submit();
+      } else {
+        alert('Ocurrió un error al iniciar la transacción.');
+        payBtn.disabled = false;
+      }
+    } catch (err) {
+      alert('Error de conexión con el servidor de pago.');
+      payBtn.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>
